@@ -42,6 +42,32 @@ resource "aws_route_table_association" "route_public_subnet" {
     route_table_id = aws_route_table.route_table.id
 }
 
+# Creating our security group for our public subnet
+resource "aws_security_group" "allowed_traffic" {
+    name = "security_allowed_traffic"
+    description = "Controlling the inbound and outbound traffic to the public subnet"
+    vpc_id = aws_vpc.main.id
+
+    tags = {
+        Name = "security_allowed_traffic"
+    }
+}
+
+# Creating security rule for ingress traffic to the public subnet
+resource "aws_vpc_security_group_ingress_rule" "allowed_traffic_ingress" {
+    security_group_id = aws_security_group.allowed_traffic.id
+    cidr_ipv4 = "${var.my_ip}/32"
+    from_port = 22
+    to_port = 22
+    ip_protocol = "tcp"
+}
+
+resource "aws_vpc_security_group_egress_rule" "allowed_traffic_egress" {
+    security_group_id = aws_security_group.allowed_traffic.id
+    cidr_ipv4 = "0.0.0.0/0"   
+    ip_protocol = "-1"
+}
+
 # Creating our public subnet
 resource "aws_subnet" "public" {
     vpc_id = aws_vpc.main.id
