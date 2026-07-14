@@ -13,6 +13,15 @@ resource "aws_vpc" "main" {
     }
 }
 
+# Creating our internet gateway
+resource "aws_internet_gateway" "internet_gateway" {
+    vpc_id  = aws_vpc.main.id
+
+    tags = {
+        Name = "internet_gateway_main"
+    }
+}
+
 # Creating our public subnet
 resource "aws_subnet" "public" {
     vpc_id = aws_vpc.main.id
