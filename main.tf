@@ -62,6 +62,7 @@ resource "aws_vpc_security_group_ingress_rule" "allowed_traffic_ingress" {
     ip_protocol = "tcp"
 }
 
+# Creating secuirty rule for egress traffic to the public subnet
 resource "aws_vpc_security_group_egress_rule" "allowed_traffic_egress" {
     security_group_id = aws_security_group.allowed_traffic.id
     cidr_ipv4 = "0.0.0.0/0"   
