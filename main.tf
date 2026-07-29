@@ -83,6 +83,33 @@ resource "aws_subnet" "public" {
     }
 }
 
+# Creating our security group for our private subnet
+resource "aws_security_group" "allowed_traffic_private" {
+    name = "allowed_traffic_private"
+    description = "Controlling the inbound and outbound traffic to the private subnet"
+    vpc_id = aws_vpc.main.id
+
+    tags = {
+        Name = "allowed_traffic_private"
+    }
+}
+
+# Creating security rule for ingress traffic to the private subnet (only within the VPC allowed)
+resource "aws_vpc_security_group_ingress_rule" "allowed_traffic_private_ingress" {
+    security_group_id = aws_security_group.allowed_traffic_private.id
+    cidr_ipv4 = "10.0.0.0/16"
+    from_port = 22
+    to_port = 22
+    ip_protocol = "tcp"
+}
+
+# Creating security rule for egress traffic to the private subnet (allowed to the internet (oubound))
+resource "aws_vpc_security_group_egress_rule" "allowed_traffic_private_egress" {
+    security_group_id = aws_security_group.allowed_traffic_private.id
+    cidr_ipv4 = "0.0.0.0/0"
+    ip_protocol = "-1"
+}
+
 
 # Creating our private subnet
 resource "aws_subnet" "private" {
