@@ -110,6 +110,54 @@ resource "aws_vpc_security_group_egress_rule" "allowed_traffic_private_egress" {
     ip_protocol = "-1"
 }
 
+resource "aws_key_pair" "ec2_access_key" {
+    key_name = "access_key"
+    public_key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOubr3w9Fo7q1u2Ijj2CciI6yqUoPavOHjkE41I0Pwkl first-cloud-project"
+}
+
+
+
+data "aws_ami" "ec2_ami" {
+    most_recent = true
+    owners = ["amazon"]
+
+    filter {
+        name = "root-device-type"
+        values = ["ebs"]
+    }
+
+    filter {
+        name = "virtualization-type"
+        values = ["hvm"]
+    }
+
+    filter {
+        name = "architecture"
+        values = ["x86_64"]
+    }
+
+    filter {
+        name = "name"
+        values = ["al2023-ami-*kernel-6.18*x86_64"]
+    }
+}
+
+resource "aws_instance" "example" {
+    ami = data.aws_ami.ec2_ami.id
+    instance_type = "t2.micro"
+    subnet_id = aws_subnet.private.id
+    vpc_security_group_ids = [aws_security_group.allowed_traffic_private.id]
+    associate_public_ip_address = false
+    
+    key_name = aws_key_pair.ec2_access_key.key_name
+
+    tags = {
+        Name = "EC2-Version1"
+    }
+}
+
+
+
 
 # Creating our private subnet
 resource "aws_subnet" "private" {
