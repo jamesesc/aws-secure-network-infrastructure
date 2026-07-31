@@ -157,6 +157,20 @@ resource "aws_instance" "private_ec2" {
     }
 }
 
+# Creating our public EC2
+resource "aws_instance" "public_ec2" {
+    ami = data.aws_ami.ec2_ami.id
+    instance_type = "t2.micro"
+    subnet_id = aws_subnet.public.id
+    vpc_security_group_ids = [aws_security_group.allowed_traffic.id]
+    associate_public_ip_address = true
+
+    key_name = aws_key_pair.ec2_access_key.key_name
+
+    tags = {
+        Name = "public-EC2"
+    }
+}
 
 
 
