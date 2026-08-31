@@ -83,7 +83,7 @@ resource "aws_subnet" "public" {
     }
 }
 
-# Creating our security group for our private subnet
+# Creating our security group for our private  
 resource "aws_security_group" "allowed_traffic_private" {
     name = "allowed_traffic_private"
     description = "Controlling the inbound and outbound traffic to the private subnet"
@@ -119,33 +119,33 @@ resource "aws_key_pair" "ec2_access_key" {
 # Filtering and storing our EC2 AMI data reference
 data "aws_ami" "ec2_ami" {
     most_recent = true
-    owners = ["amazon"]
+    owners      = ["amazon"]
 
     filter {
-        name = "root-device-type"
+        name   = "root-device-type"
         values = ["ebs"]
     }
 
     filter {
-        name = "virtualization-type"
+        name   = "virtualization-type"
         values = ["hvm"]
     }
 
     filter {
-        name = "architecture"
-        values = ["x86_64"]
+        name   = "architecture"
+        values = ["arm64"]
     }
 
     filter {
-        name = "name"
-        values = ["al2023-ami-*kernel-6.18*x86_64"]
+        name   = "name"
+        values = ["al2023-ami-*kernel-6.18*arm64"]
     }
 }
 
 # Creating our private ec2
 resource "aws_instance" "private_ec2" {
     ami = data.aws_ami.ec2_ami.id
-    instance_type = "t2.micro"
+    instance_type = "t4g.micro"
     subnet_id = aws_subnet.private.id
     vpc_security_group_ids = [aws_security_group.allowed_traffic_private.id]
     associate_public_ip_address = false
@@ -160,7 +160,7 @@ resource "aws_instance" "private_ec2" {
 # Creating our public EC2
 resource "aws_instance" "public_ec2" {
     ami = data.aws_ami.ec2_ami.id
-    instance_type = "t2.micro"
+    instance_type = "t4g.micro"
     subnet_id = aws_subnet.public.id
     vpc_security_group_ids = [aws_security_group.allowed_traffic.id]
     associate_public_ip_address = true
