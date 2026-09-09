@@ -1,6 +1,6 @@
 # Creating the S3 bucket for this VPC
 resource "aws_s3_bucket" "my_bucket" {
-    bucket = "my-first-ever-s3-bucket-cloud-project-2026"
+    bucket = var.bucket_name 
 
     tags = {
         Name = "My bucket"
