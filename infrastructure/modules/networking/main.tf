@@ -108,7 +108,7 @@ resource "aws_security_group" "allowed_traffic_private" {
 # Creating security rule for ingress traffic to the private subnet (only within the VPC allowed)
 resource "aws_vpc_security_group_ingress_rule" "allowed_traffic_private_ingress" {
     security_group_id = aws_security_group.allowed_traffic_private.id
-    cidr_ipv4 = "10.0.0.0/16"
+    referenced_security_group_id = aws_security_group.allowed_traffic_public.id 
     from_port = 22
     to_port = 22
     ip_protocol = "tcp"
