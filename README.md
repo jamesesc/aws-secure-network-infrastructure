@@ -29,9 +29,13 @@ allow me to hop through the bastion without in any way expose the key itself. Bu
 ## Deploy Steps
 
 ### Prerequsites
-- You need terraform
+- Terraform Install 
 - AWS Account
-- Money
+- AWS Credentials Configured
+- SSH Key Pair
+- Git
+
+NOTE: This provisions does cost AWS resources that will incur small charges! Please destory when completed or not in use (follow the Cleanup steps)  
 
 ### Steps
 1. Clone the repo
